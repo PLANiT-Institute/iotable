@@ -1,280 +1,200 @@
-# Steel Net Zero Transition Input-Output Analysis Tool
+# Input-Output Table Analysis Tool
 
-A comprehensive Input-Output (I-O) Table analysis tool for analyzing economic and employment impacts of hydrogen-reduced steel technologies for net zero transition. This system integrates conventional I-O table analysis with hydrogen scenario modeling to assess the transition from coal-based to hydrogen-based steel production.
+A command-line interface (CLI) tool for analyzing economic impacts using Input-Output (I-O) tables. This tool provides comprehensive analysis of inter-industry relationships, economic multipliers, and sector linkages based on Korean I-O table data.
 
-## 🌟 Key Features
+## Features
 
-### **Multi-Table Analysis**
-- **Conventional I-O Tables**: Korean I-O Table 2020 & 2023 analysis (380+ sectors)
-- **Hydrogen Table Analysis**: Specialized hydrogen value chain sectors modeling (H2S, H2T, etc.)
-- **Integrated Analysis**: Combined assessment of conventional and hydrogen value chain sectors
-- **Scenario Batch Processing**: Automated analysis across multiple scenarios and years
+### Core Analysis Capabilities
 
-### **Comprehensive Impact Assessment**
-- **Economic Effects**: 3 coefficient types (indirect production, import, value-added)
-- **Employment Effects**: Job creation and direct employment across 165 sub-sectors
-- **Hydrogen Effects**: Economic and employment effects for hydrogen value chain sectors
-- **Multi-Year Analysis**: Time-series analysis from 2026 to 2050
+- **Direct Effects Analysis**: Calculate economic impacts for individual sectors
+- **Multi-coefficient Analysis**: Support for multiple coefficient types
+  - Indirect Production (Leontief inverse)
+  - Indirect Import effects
+  - Value-Added effects
+  - Job Creation coefficients
+  - Direct Employment coefficients
+- **Sector Aggregation**: Aggregate results by product categories (code_h)
+- **Advanced Metrics**:
+  - Forward and backward linkages
+  - Economic multipliers (output, value-added, employment)
+  - Key sector identification
+  - Sector comparison analysis
+  - Sensitivity analysis
 
-### **Advanced Visualizations**
-- **Interactive Plotly Charts**: Yearly trends, sector comparisons, treemaps
-- **Code_H Treemaps**: Impact visualization by product category with size and color coding
-- **Sector Ranking**: Top 10 sector analysis with impact magnitude visualization
-- **Customizable Views**: Adjustable parameters for years and effect types
+### User-Friendly CLI Interface
 
-### **Professional GUI Interface**
-- **Streamlit Web Application**: User-friendly interface with tabbed navigation
-- **Real-time Analysis**: Instant calculation and visualization updates
-- **Scenario Data Management**: Automatic loading of Data_v11.xlsx scenario file
-- **Export Capabilities**: Excel and CSV downloads with metadata
+- Interactive menu-driven interface
+- Clear prompts and formatted output
+- Flexible sector selection (by code or name)
+- Export results to Excel or CSV formats
 
-## 📦 Installation
+## Installation
 
 ### Requirements
 
+Python 3.8 or higher is recommended.
+
 ```bash
-pip install pandas streamlit openpyxl plotly seaborn matplotlib numpy
+pip install -r requirements.txt
 ```
 
-### Python Version
-- Python 3.8 or higher recommended
+Or install dependencies manually:
 
-## 🚀 Quick Start
-
-### Launch Web Application
 ```bash
-streamlit run main_gui.py
+pip install pandas numpy openpyxl
 ```
 
-The application will open in your default web browser at `http://localhost:8501`
+### Dependencies
 
-### Command Line Analysis
+- **pandas**: Data processing and analysis
+- **numpy**: Numerical computations
+- **openpyxl**: Excel file handling
+
+## Quick Start
+
+### Running the Application
+
 ```bash
 python main.py
 ```
 
-Note: The CLI interface requires the demandchange module which is currently under development.
+The application will prompt you to select an I-O table file. Press Enter to use the default (`data/iotable_2020.xlsx`) or provide a custom path.
 
-## 📊 Application Structure
+### Basic Workflow
 
-### Main Navigation
+1. **Launch the application**
+2. **Select an I-O table** (default or custom)
+3. **Choose an analysis option** from the menu (1-11)
+4. **Follow the prompts** to input parameters
+5. **View results** in the terminal
+6. **Export results** if needed (option 10)
 
-The application has three main modules accessible from the sidebar:
+## Menu Options
 
-#### 1. **🚀 Run Analysis**
-- Automatically loads Data_v11.xlsx scenario file
-- Execute complete batch analysis across both scenarios (Scenario1=Optimized scenario and Scenario2=POSCO scenario)
-- View analysis progress and completion status
-- See loaded scenario sheets
+### Basic Analysis
 
-#### 2. **📊 Table results** (5 Tabs)
-- **🔀 Scenario Comparison**: Compare impacts across different scenarios
-- **🔗 coal+renewable**: Combined analysis of sectors 1610 (Coal) and 4506 (Renewable)
-- **⚡ H2 value chain**: Hydrogen value chain sector analysis (H2S=Hydrogen storage, H2T)
-- **📊 coal+renewable+H2 value chain**: Integrated view of all sectors
-- **👤 Individual**: Detailed individual sector analysis
+1. **List all sectors**: Display all available sectors in the I-O table
+2. **Analyze single effect**: Calculate impacts for one coefficient type
+3. **Analyze all effects**: Calculate impacts across all coefficient types
+4. **Aggregate by category**: Group results by product categories (code_h)
 
-#### 3. **📈 Visualisation** (4 Tabs)
-- **📈 Yearly Trends**: Time-series visualization of impacts by sector
-  - IO Table trends (1610=coal, 4506=renewables, 1610+4506=combined coal & renewables)
-  - Hydrogen value chain trends (H2S=Hydrogen storage, H2T=Hydrogen transportation, H2S+H2T=both Hydrogen storage & transportation)
-- **🗺️ Sector Maps**: Top 10 sector impact analysis
-- **🌳 Code_H Treemap**: Interactive treemap by Code_H category
-  - Four coefficient tabs: Indirect Production, Indirect Import, Value Added, Job Creation
-  - Size represents impact magnitude (absolute values)
-  - Color indicates direction: 🟦 Positive (blue/green) vs 🔴 Negative (red)
-  - Shows coal+renewable+H2 value chain impacts
-- **📊 Scenario comparison**: Compare both scenarios (Optimized vs POSCO) side-by-side
+### Advanced Analysis
 
-## 📖 User Guide
+5. **Calculate linkages**: Compute forward and backward linkages for sectors
+6. **Calculate multipliers**: Determine output, value-added, and employment multipliers
+7. **Compare sectors**: Compare economic impacts across multiple sectors
+8. **Identify key sectors**: Find sectors with high linkage values
+9. **Sensitivity analysis**: Test how impacts vary with different demand changes
 
-### Step 1: Run Scenario Analysis
+### Utilities
 
-1. Navigate to **Run Analysis** from the main menu
-2. The system automatically uses `Data_v11.xlsx` from the data folder
-3. Preview scenario data (optional)
-4. Click **"🚀 Run Complete Scenario Analysis"**
-5. Wait for analysis to complete (~1-2 minutes)
+10. **Export results**: Save analysis results to Excel or CSV files
+11. **Exit**: Close the application
 
-**Check sidebar**: You should see ✅ with "Data_v11.xlsx" displayed
+## Analysis Types
 
-### Step 2: View Analysis Results
+### Coefficient Types
 
-1. Go to **Table results** from the main menu
-2. Browse tabs for different analysis views:
-   - **Scenario Comparison**: Compare different scenarios and effect types (you can find graphs, too)
-   - **coal+renewable**: View integrated IO table results
-   - **H2 value chain**: View hydrogen-specific impacts
-   - **coal+renewable+H2 value chain**: See combined effects from all sectors
-   - **Individual**: Explore detailed sector-by-sector data
-3. View summary tables for target years (2026, 2030, 2040, 2050)
-4. Explore detailed sector impacts
-5. Download data as needed
+| Coefficient Type | Description | Unit | Variable Name |
+|-----------------|-------------|------|---------------|
+| Indirect Production | Production induced by demand changes (Leontief inverse) | Million Won | `indirect_prod` |
+| Indirect Import | Import requirements induced by demand changes | Million Won | `indirect_import` |
+| Value Added | GDP contribution from demand changes | Million Won | `value_added` |
+| Job Creation | Total employment created | Persons | `jobcoeff` |
+| Direct Employment | Direct jobs in affected sectors | Persons | `directemploycoeff` |
 
-### Step 3: Generate Visualizations
+### Linkage Analysis
 
-#### Yearly Trends
-1. Go to **Visualisation** → **📈 Yearly Trends**
-2. Choose IO or Hydrogen table
-3. Select effect type and sectors
-4. Click **"Generate"**
+- **Backward Linkage**: Measures how much a sector demands from other sectors
+- **Forward Linkage**: Measures how much other sectors demand from this sector
+- **Key Sectors**: Sectors with both high backward and forward linkages (normalized > 1.0)
 
-#### Code_H Treemap
-1. Go to **Visualisation** → **🌳 Code_H Treemap**
-2. Select:
-   - Scenario sheet (Scenario1 or Scenario2)
-   - Year (2026, 2030, 2040, or 2050)
-3. Choose one of four coefficient tabs:
-   - 💰 **Indirect Production**: Combined IO and H2 production effects
-   - 🌐 **Indirect Import**: Import-inducing effects
-   - 💎 **Value Added**: Combined IO and H2 value-added effects
-   - 👥 **Job Creation**: Total employment effects
-4. View interactive treemap automatically generated
-5. Hover over rectangles for detailed values
+### Multiplier Analysis
 
-## 📁 Data Files
+- **Output Multiplier**: Total output generated per unit of final demand
+- **Value-Added Multiplier**: Total GDP generated per unit of final demand
+- **Employment Multiplier**: Total jobs created per unit of final demand
 
-### Scenario Files (`data/`)
-- **`Data_v11.xlsx`**: Current data file containing two scenarios (Scenario1=Optimized and Scenario2=POSCO)
+## Data Files
 
-### Core Data Files
-- **`iotable_2020.xlsx`**: Korean I-O Table 2020
-- **`iotable_2023.xlsx`**: Korean I-O Table 2023 (latest)
-- **`hydrogentable.xlsx`**: Coefficients for Hydrogen value chain effects
+### Required Data Structure
 
-### Data File Structure
+I-O table Excel files must contain the following sheets:
 
-The Data_v11.xlsx file contains two main scenario sheets (Scenario1=Optimized and Scenario2=POSCO), plus supporting data sheets. Each scenario sheet has:
-- **Columns**: `input`, `sector`, and year columns (2026, 2027, ..., 2050)
-- **input**: Data source ('iotable_2023.xlsx' or 'hydrogentable.xlsx')
-- **sector**: Sector code ('1610', '4506', 'H2S', 'H2T')
-- **Year columns**: Demand change values for each year
+- **basicmap**: Mapping of sector codes to names and categories
+- **indirectprodcoeff**: Indirect production coefficients
+- **indirectimportcoeff**: Indirect import coefficients
+- **valueaddedcoeff**: Value-added coefficients
+- **jobcoeff**: Job creation coefficients (optional)
+- **directemploycoeff**: Direct employment coefficients (optional)
+- **subsectormap**: Sub-sector mapping for employment analysis (optional)
 
-Example:
-```
-input              | sector | 2026       | 2027       | ... | 2050
--------------------|--------|------------|------------|-----|------------
-iotable_2023.xlsx  | 1610   | -660838    | -1206553   | ... | -9885162
-iotable_2023.xlsx  | 4506   | 2529788    | 4029588    | ... | 80347640
-hydrogentable.xlsx | H2S    | 0          | 0          | ... | 4028525
-hydrogentable.xlsx | H2T    | 0          | 0          | ... | 4584183
-```
+### Included Data
 
+- **`data/iotable_2020.xlsx`**: Korean Input-Output Table 2020 (380+ sectors)
 
-## 🔬 Analysis Types
+## Usage Examples
 
-### Economic Coefficients (I-O Table)
-
-| Effect Type | Description | Unit | Applicable Sectors |
-|-------------|-------------|------|-----------|
-| `indirect_prod` | Indirect Production (Leontief) | Million Won | 1610 + 4506 |
-| `indirect_import` | Indirect Import | Million Won | 1610 + 4506 |
-| `value_added` | Value Added (GDP) | Million Won | 1610 + 4506 |
-
-### Hydrogen-specific Coefficients
-
-| Effect Type | Description | Unit | Applicable Sectors |
-|-------------|-------------|------|-----------|
-| `productioncoeff` | Production Inducing Effect | Million Won | H2S + H2T |
-| `valueaddedcoeff` | Value Added Effect | Million Won | H2S + H2T |
-
-### Employment Coefficients
-
-| Effect Type | Description | Unit | Applicable Sectors |
-|-------------|-------------|------|-----------|
-| `jobcoeff` | Total Job Creation | Persons | All (IO + H2) |
-| `directemploycoeff` | Direct Employment | Persons | All (IO + H2) |
-
-## 🎨 Visualization Features
-
-### Code_H Treemap
-
-The Code_H treemap provides a comprehensive view of sector impacts aggregated by Code_H categories:
-
-**Features**:
-- **Four Coefficient Tabs**:
-  - 💰 Indirect Production (indirect_prod + productioncoeff)
-  - 🌐 Indirect Import (indirect_import)
-  - 💎 Value Added (value_added + valueaddedcoeff)
-  - 👥 Job Creation (jobcoeff + directemploycoeff)
-- **Rectangle Size**: Proportional to impact magnitude (absolute value)
-  - Larger rectangle = Greater impact
-- **Rectangle Color**: Indicates direction of impact
-  - 🟦 Blue/Green = Positive impact (increases)
-  - 🔴 Red/Orange = Negative impact (decreases)
-- **Labels**: Display Product_H category name and value with +/- sign
-- **Data Source**: coal+renewable+H2 value chain (1610+4506+H2S+H2T)
-
-**Interactive Features**:
-- Hover for detailed information (Code_H, Product_H, exact value)
-- Automatic layout optimization
-- Responsive design
-- Download as HTML
-
-### Yearly Trends
-
-Track how impacts evolve over time:
-- Multiple sectors on one chart
-- Customizable effect types
-- Separate IO and Hydrogen trend analysis
-- Clear unit labeling (Billion Won vs Persons)
-
-## 💾 Export Options
-
-### Available Formats
-
-1. **Excel (.xlsx)**
-   - Multiple sheets per file
-   - One sheet per effect type
-   - Metadata included (analysis parameters, dates)
-   - Formatted for easy reading
-
-2. **CSV (.csv)**
-   - UTF-8 with BOM encoding (Korean text support)
-   - Fallback when Excel not available
-   - Compatible with Excel and Google Sheets
-
-3. **HTML (.html)**
-   - Interactive Plotly charts
-   - Fully functional offline
-   - Shareable visualizations
-
-### Export Contents
-
-- **Summary Tables**: Aggregated impacts by year
-- **Detailed Sector Data**: Individual sector impacts
-- **Visualization Files**: Interactive charts and heatmaps
-- **Complete Analysis**: All effect types in one file
-
-## 📋 File Structure
+### Example 1: Analyze Production Effects
 
 ```
-steel_iotable/
-├── main_gui.py                     # Main Streamlit application (2599 lines)
-├── main.py                         # CLI interface (85 lines, under development)
-│
-├── libs/                           # Core library modules
-│   ├── __init__.py                 # Package initialization
-│   ├── io_analyzer.py              # I-O Table analysis (583 lines)
-│   ├── hydrogen_analyzer.py        # Hydrogen scenario analysis (242 lines)
-│   ├── scenario_analyzer.py        # Batch scenario processor (1066 lines)
-│   └── visualisation.py            # Visualization engine (1150 lines)
-│
-├── data/                           # Data files
-│   ├── Data_v11.xlsx               # Current data file with multiple scenarios ⭐
-│   ├── iotable_2020.xlsx           # Korean I-O Table 2020
-│   ├── iotable_2023.xlsx           # Korean I-O Table 2023 ⭐
-│   └── hydrogentable.xlsx          # Hydrogen coefficients
-│
-├── RAS trial/                      # RAS methodology experiments, back-up purpose
-│   ├── rassourcecode.py            # RAS algorithm implementation, back-up purpose
-│   ├── rassourcecode_gras.py       # GRAS algorithm implementation, back-up purpose
-│   └── output/                     # RAS estimation outputs, back-up purpose
-│
-└── README.md                       # This file
+Select option: 2
+Select type: indirect_prod
+Enter sector code: 1610
+Enter demand change: 1000000
 ```
 
-## 🎓 Analysis Methodology
+This calculates the indirect production effects of a 1 billion won increase in sector 1610.
+
+### Example 2: Compare Multiple Sectors
+
+```
+Select option: 7
+Sectors: 1610, 4506
+Enter demand change: 1000000
+Coefficient type: value_added
+```
+
+This compares the value-added impacts of a 1 billion won increase in sectors 1610 and 4506.
+
+### Example 3: Identify Key Sectors
+
+```
+Select option: 8
+Enter threshold: 1.0
+```
+
+This identifies all sectors with normalized backward and forward linkages above 1.0.
+
+### Example 4: Sensitivity Analysis
+
+```
+Select option: 9
+Enter sector code: 1610
+Values: 100000, 500000, 1000000, 5000000
+Coefficient type: indirect_prod
+```
+
+This tests how production impacts vary across different demand change scenarios.
+
+## Project Structure
+
+```
+iotable/
+├── main.py                    # Main CLI application
+├── requirements.txt           # Python dependencies
+├── README.md                  # This file
+│
+├── libs/                      # Core library modules
+│   ├── __init__.py            # Package initialization
+│   ├── io_analyzer.py         # I-O table analysis engine
+│   └── wrapper.py             # CLI menu handlers
+│
+└── data/                      # Data files
+    └── iotable_2020.xlsx      # Korean I-O Table 2020
+```
+
+## Analysis Methodology
 
 ### Economic Impact Formula
 
@@ -289,15 +209,80 @@ Where:
 - ΔD_j: Demand change in sector j
 ```
 
-### Employment Impact Formula
+### Linkage Calculation
 
 ```
-Jobs = Employment Coefficient Matrix × Demand Change
+Backward Linkage_j = Σ_i (L_ij) / n
+Forward Linkage_i = Σ_j (L_ij) / n
 
-For sub-sector i:
-Jobs_i = E_ij × ΔD_j
+Normalized Linkage = Linkage / Average(All Linkages)
 
 Where:
-- E_ij: Job coefficient (jobs per billion won)
-- ΔD_j: Demand change in basic sector j (mapped to sub-sector)
+- L_ij: Leontief inverse coefficient
+- n: Number of sectors
 ```
+
+### Multiplier Calculation
+
+```
+Output Multiplier_j = Σ_i (L_ij)
+Value-Added Multiplier_j = Σ_i (V_i × L_ij)
+Employment Multiplier_j = Σ_i (E_i × L_ij)
+
+Where:
+- V_i: Value-added coefficient for sector i
+- E_i: Employment coefficient for sector i
+```
+
+## Export Formats
+
+### Excel Export (.xlsx)
+- Formatted tables with headers
+- Separate sheets for different result types
+- Metadata included (analysis parameters, dates)
+
+### CSV Export (.csv)
+- UTF-8 with BOM encoding (Korean text support)
+- Compatible with Excel and other spreadsheet applications
+
+## Technical Details
+
+### Sector Code Format
+
+- Basic sectors: 4-digit codes (e.g., "0111", "1610", "4506")
+- Sub-sectors: 3-digit codes (e.g., "001", "165")
+- Product categories: code_h classification
+
+### Data Processing
+
+- Uses pandas for efficient data manipulation
+- Supports large I-O tables (380+ sectors)
+- Optimized matrix operations with numpy
+
+## Troubleshooting
+
+### Common Issues
+
+**Error: File not found**
+- Ensure the I-O table file exists in the specified path
+- Check that the file path is correct
+
+**Error: Invalid sector code**
+- Verify the sector code exists in the I-O table
+- Use option 1 to list all available sectors
+
+**Error: Sheet not found**
+- Ensure the Excel file contains all required sheets
+- Check sheet names match expected format
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues or pull requests.
+
+## Support
+
+For questions or issues, please open an issue on the project repository.

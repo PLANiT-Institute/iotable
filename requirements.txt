@@ -1,9 +1,9 @@
-# Steel Net Zero Transition Input-Output Analysis Tool
+# Input-Output Table Analysis Tool
 # Python 3.8 or higher recommended
 
 # Core data processing
-pandas==2.3.0
-numpy==1.26.4
+pandas>=2.0.0
+numpy>=1.24.0
 
 # Excel file handling
-openpyxl==3.1.5
+openpyxl>=3.1.0
