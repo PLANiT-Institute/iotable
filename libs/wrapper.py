@@ -30,7 +30,12 @@ def handle_single_effect(analyzer):
         coeff_type = 'indirect_prod'
 
     sector_code = get_sector_code()
-    demand_change = float(input("Enter demand change (million won): ").strip())
+
+    try:
+        demand_change = float(input("Enter demand change (million won): ").strip())
+    except ValueError:
+        print("Invalid number. Using default: 1000000 (1 billion won)")
+        demand_change = 1000000
 
     results = analyzer.calculate_direct_effects(sector_code, demand_change, coeff_type)
     analyzer.display_results(results)
@@ -38,7 +43,12 @@ def handle_single_effect(analyzer):
 def handle_all_effects(analyzer):
     """Option 3: Analyze all effects."""
     sector_code = get_sector_code()
-    demand_change = float(input("Enter demand change (million won): ").strip())
+
+    try:
+        demand_change = float(input("Enter demand change (million won): ").strip())
+    except ValueError:
+        print("Invalid number. Using default: 1000000 (1 billion won)")
+        demand_change = 1000000
 
     all_results, coefficient_types, _ = analyzer.calculate_all_effects(
         sector_code, demand_change, quiet=False
@@ -54,14 +64,21 @@ def handle_aggregate_by_category(analyzer):
     print("indirect_prod     - Indirect Production")
     print("indirect_import   - Indirect Import")
     print("value_added       - Value-Added")
+    print("jobcoeff          - Job Creation")
+    print("directemploycoeff - Direct Employment")
 
     coeff_type = input("\nSelect type: ").strip()
-    valid_types = ['indirect_prod', 'indirect_import', 'value_added']
+    valid_types = ['indirect_prod', 'indirect_import', 'value_added', 'jobcoeff', 'directemploycoeff']
     if coeff_type not in valid_types:
         coeff_type = 'indirect_prod'
 
     sector_code = get_sector_code()
-    demand_change = float(input("Enter demand change (million won): ").strip())
+
+    try:
+        demand_change = float(input("Enter demand change (million won): ").strip())
+    except ValueError:
+        print("Invalid number. Using default: 1000000 (1 billion won)")
+        demand_change = 1000000
 
     results = analyzer.calculate_effects_by_code_h(sector_code, demand_change, coeff_type)
     analyzer.display_code_h_results(results)
@@ -142,7 +159,12 @@ def handle_compare_sectors(analyzer):
             sector_code = sector_input
         sector_codes.append(sector_code)
 
-    demand_change = float(input("Enter demand change (million won): ").strip())
+    try:
+        demand_change = float(input("Enter demand change (million won): ").strip())
+    except ValueError:
+        print("Invalid number. Using default: 1000000 (1 billion won)")
+        demand_change = 1000000
+
     coeff_type = input("Coefficient type (default: indirect_prod): ").strip() or 'indirect_prod'
 
     comparison = analyzer.compare_sectors(sector_codes, demand_change, coeff_type)
@@ -162,8 +184,16 @@ def handle_compare_sectors(analyzer):
 
 def handle_key_sectors(analyzer):
     """Option 8: Identify key sectors."""
-    threshold = input("Enter threshold (default 1.0): ").strip()
-    threshold = float(threshold) if threshold else 1.0
+    threshold_input = input("Enter threshold (default 1.0): ").strip()
+
+    if threshold_input:
+        try:
+            threshold = float(threshold_input)
+        except ValueError:
+            print("Invalid number. Using default: 1.0")
+            threshold = 1.0
+    else:
+        threshold = 1.0
 
     key_sectors_data = analyzer.identify_key_sectors(threshold)
 
@@ -192,7 +222,17 @@ def handle_sensitivity_analysis(analyzer):
     print("\nEnter demand changes to test (comma-separated):")
     print("Example: 100000,200000,500000,1000000")
     changes_input = input("Values: ").strip().split(',')
-    demand_changes = [float(x.strip()) for x in changes_input]
+
+    demand_changes = []
+    for x in changes_input:
+        try:
+            demand_changes.append(float(x.strip()))
+        except ValueError:
+            print(f"Skipping invalid value: {x.strip()}")
+
+    if not demand_changes:
+        print("No valid demand changes provided. Using defaults: 100000, 500000, 1000000")
+        demand_changes = [100000, 500000, 1000000]
 
     coeff_type = input("Coefficient type (default: indirect_prod): ").strip() or 'indirect_prod'
 
@@ -215,12 +255,22 @@ def handle_export_results(analyzer):
     print("\nFirst, run an analysis to get results...")
 
     sector_code = get_sector_code()
-    demand_change = float(input("Enter demand change (million won): ").strip())
+
+    try:
+        demand_change = float(input("Enter demand change (million won): ").strip())
+    except ValueError:
+        print("Invalid number. Using default: 1000000 (1 billion won)")
+        demand_change = 1000000
+
     coeff_type = input("Coefficient type (default: indirect_prod): ").strip() or 'indirect_prod'
 
     results = analyzer.calculate_direct_effects(sector_code, demand_change, coeff_type, quiet=True)
 
     filename = input("Enter output filename (without extension): ").strip()
+    if not filename:
+        filename = f"iotable_results_{sector_code}"
+        print(f"Using default filename: {filename}")
+
     format_choice = input("Format (xlsx/csv, default: xlsx): ").strip() or 'xlsx'
 
     analyzer.export_results(results, filename, format_choice)

@@ -11,6 +11,7 @@ class IOTableAnalyzer:
         self.coefficients = {}
         self.basic_to_subsector = {}
         self.basic_to_subsector_to_code_h = {}
+        self.subsector_to_code_h = {}  # Direct mapping from sub-sector to code_h
         self.subsector_to_name = {}
         self.code_h_to_product_h = {}
         self.basic_to_code_h = {}
@@ -117,6 +118,8 @@ class IOTableAnalyzer:
                 code_h_value = row['code_h']
                 self.basic_to_subsector[basic_code] = subsector_code
                 self.basic_to_subsector_to_code_h.setdefault(basic_code, {})[subsector_code] = code_h_value
+                # Also create direct sub-sector to code_h mapping for job coefficient aggregation
+                self.subsector_to_code_h[subsector_code] = code_h_value
 
             # Create code-to-product mapping dictionary
             self.code_to_product = pd.Series(
@@ -286,8 +289,10 @@ class IOTableAnalyzer:
             raise ValueError(f"Sub-sector column {subsector_code} not found in {coeff_type} coefficient matrix")
 
         # Calculate job effects: coefficient * demand_change
-        # Note: Job coefficients represent jobs per unit of output, so result is in number of jobs
-        job_impacts = selected_coeffs[subsector_code] * demand_change / 1000
+        # Note: Job coefficients represent persons per billion won of output
+        # demand_change is in million won, so divide by 1000 to convert to billion won
+        # Result is in number of persons (jobs)
+        job_impacts = selected_coeffs[subsector_code] * (demand_change / 1000)
 
         significant_impacts = job_impacts
 
@@ -329,6 +334,8 @@ class IOTableAnalyzer:
         """
         Aggregate basic sector results to code_h level.
 
+        Handles both basic sector codes (4-digit) and sub-sector codes (3-digit for job coefficients).
+
         Args:
             results: Dictionary from calculate_direct_effects
 
@@ -337,13 +344,23 @@ class IOTableAnalyzer:
         """
         code_h_impacts = {}
 
+        # Check if this is a job coefficient result (has subsector_code key)
+        is_job_coefficient = 'subsector_code' in results
+
         for impact in results['impacts']:
             sector_code = impact['sector_code']
             impact_value = impact['impact']
 
-            # Get code_h for this basic sector
-            if sector_code in self.basic_to_code_h:
+            # Get code_h - check both basic sector and sub-sector mappings
+            code_h = None
+            if is_job_coefficient and sector_code in self.subsector_to_code_h:
+                # For job coefficients, use sub-sector to code_h mapping
+                code_h = self.subsector_to_code_h[sector_code]
+            elif sector_code in self.basic_to_code_h:
+                # For regular coefficients, use basic sector to code_h mapping
                 code_h = self.basic_to_code_h[sector_code]
+
+            if code_h:
                 product_h = self.code_h_to_product_h.get(code_h, f"Category {code_h}")
 
                 if code_h not in code_h_impacts:
@@ -683,11 +700,12 @@ class IOTableAnalyzer:
                 df.to_excel(writer, sheet_name='Impacts', index=False)
         else:
             # For CSV, write metadata as header comments
-            with open(f"{filename}.csv", 'w') as f:
+            # Use UTF-8 with BOM encoding for proper Korean text support in Excel
+            with open(f"{filename}.csv", 'w', encoding='utf-8-sig') as f:
                 for key, value in metadata.items():
                     f.write(f"# {key}: {value}\n")
                 f.write("\n")
-            df.to_csv(f"{filename}.csv", mode='a', index=False)
+            df.to_csv(f"{filename}.csv", mode='a', index=False, encoding='utf-8-sig')
 
     def identify_key_sectors(self, threshold: float = 1.0) -> Dict:
         """
