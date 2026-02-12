@@ -1,0 +1,25 @@
+{
+  "data_source": {
+    "transaction_data_path": "data/io_transaction_dataframe.csv",
+    "index_data_path": "data/io_index_dataframe.csv"
+  },
+  "filters": {
+    "geographical_level": null,
+    "tables": null,
+    "output_region": null,
+    "input_region": null,
+    "output_sectors": null,
+    "input_sectors": null,
+    "min_value": null,
+    "max_value": null
+  },
+  "analysis": {
+    "direction": "both",
+    "aggregation": "sum"
+  },
+  "output": {
+    "save_results": true,
+    "output_directory": "analysis_results",
+    "verbose": true
+  }
+}
